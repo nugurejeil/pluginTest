@@ -44,7 +44,7 @@ module.exports = {
     },
     plugins: [
         new webpack.BannerPlugin({
-            // banner: '배너입니다!!'
+            // banner: '배너입니다!!~~'
             banner:
                 `
             last build : ${new Date().toLocaleString()}
