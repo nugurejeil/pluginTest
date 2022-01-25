@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // module.exports : node의 모듈 문법입니다.
 module.exports = {
-    mode: 'development',
+
     entry: {
         // main: './src/app.js'
         main: path.resolve('./src/app.js')
@@ -48,17 +48,24 @@ module.exports = {
             banner:
                 `
             last build : ${new Date().toLocaleString()}
-            git commit : ${childProcess.execSync('git rev-parse --short HEAD')}
+            git commit : ${childProcess.execSync('git rev-parse --short HEAD')} 
             committer : ${childProcess.execSync('git config user.name')}
             `
             // toLocaleString() : 사용자의 환경에 알맞는 형태로 스트링을 반환합니다. 인자로 장소를 지정하지 않으면 브라우저를 참고해 사용자의 장소를 설정합니다.
+
+            // rev-parse : 커밋된 버전의 명세를 해쉬 함수로 표현합니다. --short : 짧게, HEAD : 커밋 아이디
+
+        }),
+        new webpack.DefinePlugin({ // 빌드시에 사용할 수 있는 전역 상수를 만들수 있습니다. 노드의 환경정보를 어플리케이션에 전달해줄 때 많이 사용합니다. 
+            pw: 123456,
+            env: JSON.stringify(process.env.NODE_ENV)
         }),
         new HtmlWebpackPlugin({
             template: './src/index.html', // 목표 html파일의 위치입니다.
             // templateParameters: {
             //     env: process.env.NODE_ENV === 'development' ? '개발환경입니다' : ''
             // },
-            minify: process.env.NODE_ENV === 'development' ? {
+            minify: process.env.NODE_ENV === 'production' ? {
                 collapseWhitespace: true,
                 removeComments: true,
             } : false
