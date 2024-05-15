@@ -2,6 +2,7 @@ const path = require('path'); // node.js path 모듈을 불러옵니다. 운영�
 const webpack = require('webpack'); // 웹팩 모듈을 불러옵니다.
 const childProcess = require('child_process'); // child_process 프로세스 모듈 : 터미널 명령어를 입력할 수 있게 합니다.
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 
 // module.exports : node의 모듈 문법입니다.
 module.exports = {
@@ -70,5 +71,28 @@ module.exports = {
                 removeComments: true,
             } : false
         })
-    ]
+    ],
+    optimization: {
+        // minimize: true는 웹팩의 최적화 설정 중 하나입니다. 이 옵션은 번들된 JavaScript 파일의 크기를 최소화하기 위해 해당 파일을 압축하는 작업을 수행할지 여부를 지정합니다.
+        minimize: true,
+        minimizer: [
+
+            new ImageMinimizerPlugin({
+
+                // e? : e가 있어도 되고 없어도 된다는 의미입니다. 
+                test: /\.(jpe?g|png|gif|svg)$/i,
+                minimizer: {
+                    implementation: ImageMinimizerPlugin.imageminMinify,
+                    options: {
+                        // Lossless optimization with custom option
+                        // Feel free to experiment with options for better result for you
+                        plugins: [
+                            ["imagemin-optipng", { optimizationLevel: 3 }],
+                        ],
+                    },
+                },
+            }),
+        ],
+    },
+
 };
